@@ -1,0 +1,9 @@
+{
+  "network": "aurora",
+  "AaveOracleAddress": "0xe2875f73beA0F72d452bBCB2940A2E99B3175AF5",
+  "AaveOracleStartBlock": 54888385,
+  "LendingPoolAddressesProviderRegistryAddress": "0x45960a1c21e2CD37Fe3Ac17B4823166B2A4fce6a",
+  "LendingPoolAddressesProviderRegistryStartBlock": 54888035,
+  "ChainlinkSourcesRegistryAddress": "",
+  "ChainlinkSourcesRegistryStartBlock": 0
+}
