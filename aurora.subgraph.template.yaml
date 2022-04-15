@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Protocol v2 subgraph
-repository: https://github.com/aave/protocol-v2-subgraph
+description: Pret Protocol subgraph
+repository: https://github.com/pret-labs/pret-protocol-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -36,8 +36,8 @@ dataSources:
           handler: handleAssetSourceUpdated
         - event: FallbackOracleUpdated(indexed address)
           handler: handleFallbackOracleUpdated
-        - event: WethSet(indexed address)
-          handler: handleWethSet
+        # - event: WethSet(indexed address)
+        #   handler: handleWethSet
       file: src/mapping/proxy-price-provider/aurora.ts
   # --------------------------------------
   #           CONFIGURATIONS

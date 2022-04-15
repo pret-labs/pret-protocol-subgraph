@@ -9,7 +9,7 @@ import {
   zeroBI,
 } from '../../utils/converters';
 import { IExtendedPriceAggregator } from '../../../generated/AaveOracle/IExtendedPriceAggregator';
-import { EACAggregatorProxy } from '../../../generated/AaveOracle/EACAggregatorProxy';
+// import { EACAggregatorProxy } from '../../../generated/AaveOracle/EACAggregatorProxy';
 import { ChainlinkAggregator as ChainlinkAggregatorContract } from '../../../generated/templates';
 import {
   getChainlinkAggregator,
@@ -19,7 +19,7 @@ import {
 import { MOCK_USD_ADDRESS } from '../../utils/constants';
 import { genericPriceUpdate, usdEthPriceUpdate } from '../../helpers/price-updates';
 import { AggregatorUpdated } from '../../../generated/ChainlinkSourcesRegistry/ChainlinkSourcesRegistry';
-export { handleFallbackOracleUpdated, handleWethSet } from './proxy-price-provider';
+export { handleFallbackOracleUpdated/* , handleWethSet */ } from './proxy-price-provider';
 
 export function priceFeedUpdated(
   event: ethereum.Event,
@@ -34,6 +34,13 @@ export function priceFeedUpdated(
   let proxyPriceProvider = AaveOracle.bind(
     Address.fromString(priceOracle.proxyPriceProvider.toHexString())
   );
+
+  // [TODO] logging: can be removed later
+  log.warning(`priceFeedUpdated() - 1: proxyPriceProvider: {}; sAssetAddress: {}`, [
+    priceOracle.proxyPriceProvider.toHexString(),
+    sAssetAddress,
+  ]);
+
   let priceFromOracle = zeroBI();
   let priceFromProxyCall = proxyPriceProvider.try_getAssetPrice(assetAddress);
   if (!priceFromProxyCall.reverted) {
@@ -60,21 +67,33 @@ export function priceFeedUpdated(
       priceOracleAsset.type = getPriceOracleAssetType(tokenTypeCall.value);
     }
 
+    // [TODO] logging: can be removed later
+    log.warning(`priceFeedUpdated() - 2: assetAddress: {}; priceOracleAsset.type: {}; priceFromOracle: {}`,
+      [
+        assetAddress.toHexString(),
+        priceOracleAsset.type,
+        priceFromOracle.toString()
+      ]
+    );
+
     // Type simple means that the source is chainlink source
     if (priceOracleAsset.type == PRICE_ORACLE_ASSET_TYPE_SIMPLE) {
-      // get underlying aggregator from proxy (assetOracleAddress) address
-      let chainlinkProxyInstance = EACAggregatorProxy.bind(assetOracleAddress);
-      let aggregatorAddressCall = chainlinkProxyInstance.try_aggregator();
-      // If we can't get the aggregator, it means that the source address is not a chainlink proxy
-      // so it has been registered badly.
-      if (aggregatorAddressCall.reverted) {
-        log.error(
-          `PROXY: Simple Type must be a chainlink proxy. || asset: {} | assetOracleAddress: {}`,
-          [sAssetAddress, assetOracleAddress.toHexString()]
-        );
-        return;
-      }
-      let aggregatorAddress = aggregatorAddressCall.value;
+      // // get underlying aggregator from proxy (assetOracleAddress) address
+      // let chainlinkProxyInstance = EACAggregatorProxy.bind(assetOracleAddress);
+      // let aggregatorAddressCall = chainlinkProxyInstance.try_aggregator();
+      // // If we can't get the aggregator, it means that the source address is not a chainlink proxy
+      // // so it has been registered badly.
+      // if (aggregatorAddressCall.reverted) {
+      //   log.error(
+      //     `PROXY: Simple Type must be a chainlink proxy. || asset: {} | assetOracleAddress: {}`,
+      //     [sAssetAddress, assetOracleAddress.toHexString()]
+      //   );
+      //   return;
+      // }
+      // let aggregatorAddress = aggregatorAddressCall.value;
+
+      // Flux doesn't use a proxy aggregator here. send the price feed direclty.
+      let aggregatorAddress = assetOracleAddress;
       priceOracleAsset.priceSource = aggregatorAddress;
       // create ChainLink aggregator template entity
       ChainlinkAggregatorContract.create(aggregatorAddress);
@@ -124,6 +143,7 @@ export function priceFeedUpdated(
       priceFromOracle.toString(),
     ]);
   }
+
   // if (assetAddress.toHexString != MOCK_USD_ADDRESS)
   if (sAssetAddress == MOCK_USD_ADDRESS) {
     priceOracle.usdPriceEthFallbackRequired = priceOracleAsset.isFallbackRequired;
@@ -174,12 +194,28 @@ export function handleAssetSourceUpdated(event: AssetSourceUpdated): void {
   let priceOracleAsset = getPriceOracleAsset(assetAddress.toHexString());
   priceOracleAsset.fromChainlinkSourcesRegistry = false;
 
+  // [TODO] logging: can be removed later
+  log.warning(`handleAssetSourceUpdated: sAssetAddress: {}; assetOracleAddress: {}; priceOracle.proxyPriceProvider: {}; priceOracle.usdPriceEth: {}`,
+    [
+      sAssetAddress,
+      assetOracleAddress.toHexString(),
+      priceOracle.proxyPriceProvider.toHexString(),
+      priceOracle.usdPriceEth.toString(),
+    ]
+  );
+
   priceFeedUpdated(event, assetAddress, assetOracleAddress, priceOracleAsset, priceOracle);
 }
 
 export function handleChainlinkAggregatorUpdated(event: AggregatorUpdated): void {
   let assetAddress = event.params.token;
   let assetOracleAddress = event.params.aggregator; // its proxy . Wrong naming
+
+  // [TODO] logging: can be removed later
+  log.warning(`handleChainlinkAggregatorUpdated: token: {}; aggregator: {}`, [
+    assetAddress.toHexString(),
+    assetOracleAddress.toHexString()
+  ]);
 
   let priceOracle = getOrInitPriceOracle();
   let priceOracleAsset = getPriceOracleAsset(assetAddress.toHexString());
