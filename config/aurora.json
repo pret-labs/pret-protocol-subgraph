@@ -1,9 +1,9 @@
 {
   "network": "aurora",
-  "AaveOracleAddress": "0x0C00AC7813f828085FabcD87b52c30AeF3e23e47",
-  "AaveOracleStartBlock": 63514700,
-  "LendingPoolAddressesProviderRegistryAddress": "0x42f9BAA3B0845a2B26002a961Ae498581502e841",
-  "LendingPoolAddressesProviderRegistryStartBlock": 63514420,
-  "ChainlinkSourcesRegistryAddress": "0x81c8DEF55378ac3369747d34dBe1daa2aAAe6C5F",
-  "ChainlinkSourcesRegistryStartBlock": 63516430
+  "AaveOracleAddress": "0x53Cf583fc04E48f6BF32831F8AE498A93CB3F8d0",
+  "AaveOracleStartBlock": 63775020,
+  "LendingPoolAddressesProviderRegistryAddress": "0x058578D14279a32D00Be87A96008A6D5217d19Be",
+  "LendingPoolAddressesProviderRegistryStartBlock": 63774780,
+  "ChainlinkSourcesRegistryAddress": "0x86fF783E01109ad5CC159d0f9F515d3C274d22e4",
+  "ChainlinkSourcesRegistryStartBlock": 63775860
 }
