@@ -216,37 +216,37 @@ templates:
         - event: Initialized(indexed address,indexed address,address,address,uint8,string,string,bytes)
           handler: handleATokenInitialized
       file: src/mapping/tokenization/initialization.ts
-  - kind: ethereum/contract
-    name: StableDebtToken
-    network: {{network}}
-    source:
-      abi: StableDebtToken
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - StableDebtToken
-        - UserReserve
-      abis:
-        # - name: StableDebtToken
-        #   file: ./externals/protocol-v2/artifacts/contracts/protocol/tokenization/StableDebtToken.sol/StableDebtToken.json
-        - name: StableDebtToken
-          file: ./constant-abis/StableDebtToken.json
-        - name: IERC20Detailed
-          file: ./externals/protocol-v2/artifacts/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol/IERC20Detailed.json
-        - name: AaveIncentivesController
-          file: ./constant-abis/AaveIncentivesController.json
-      eventHandlers:
-        - event: Burn(indexed address,uint256,uint256,uint256,uint256,uint256)
-          handler: handleStableTokenBurn
-        - event: Mint(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
-          handler: handleStableTokenMint
-        - event: BorrowAllowanceDelegated(indexed address,indexed address,address,uint256)
-          handler: handleStableTokenBorrowAllowanceDelegated
-        - event: Initialized(indexed address,indexed address,address,uint8,string,string,bytes)
-          handler: handleSTokenInitialized
-      file: src/mapping/tokenization/initialization.ts
+  # - kind: ethereum/contract
+  #   name: StableDebtToken
+  #   network: {{network}}
+  #   source:
+  #     abi: StableDebtToken
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.4
+  #     language: wasm/assemblyscript
+  #     entities:
+  #       - StableDebtToken
+  #       - UserReserve
+  #     abis:
+  #       # - name: StableDebtToken
+  #       #   file: ./externals/protocol-v2/artifacts/contracts/protocol/tokenization/StableDebtToken.sol/StableDebtToken.json
+  #       - name: StableDebtToken
+  #         file: ./constant-abis/StableDebtToken.json
+  #       - name: IERC20Detailed
+  #         file: ./externals/protocol-v2/artifacts/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol/IERC20Detailed.json
+  #       - name: AaveIncentivesController
+  #         file: ./constant-abis/AaveIncentivesController.json
+  #     eventHandlers:
+  #       - event: Burn(indexed address,uint256,uint256,uint256,uint256,uint256)
+  #         handler: handleStableTokenBurn
+  #       - event: Mint(indexed address,indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
+  #         handler: handleStableTokenMint
+  #       - event: BorrowAllowanceDelegated(indexed address,indexed address,address,uint256)
+  #         handler: handleStableTokenBorrowAllowanceDelegated
+  #       - event: Initialized(indexed address,indexed address,address,uint8,string,string,bytes)
+  #         handler: handleSTokenInitialized
+  #     file: src/mapping/tokenization/initialization.ts
   - kind: ethereum/contract
     name: VariableDebtToken
     network: {{network}}
