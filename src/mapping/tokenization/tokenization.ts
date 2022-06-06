@@ -314,12 +314,21 @@ export function handleVariableTokenBurn(event: VTokenBurn): void {
   saveReserve(poolReserve, event);
 
   let user = getOrInitUser(from);
+  log.warning("update borrowedReservesCount: {} | {}",
+    [
+      userReserve.scaledVariableDebt.toString(),
+      userReserve.principalStableDebt.toString()
+    ]
+  );
   if (
     userReserve.scaledVariableDebt.equals(zeroBI()) &&
     userReserve.principalStableDebt.equals(zeroBI())
   ) {
     user.borrowedReservesCount -= 1;
     user.save();
+    log.warning("descrease borrowedReservesCount to {}", [
+      BigInt.fromI32(user.borrowedReservesCount).toString()
+    ]);
   }
 
   saveUserReserveVHistory(userReserve, event, index);
@@ -340,12 +349,21 @@ export function handleVariableTokenMint(event: VTokenMint): void {
   let userReserve = getOrInitUserReserve(from, vToken.underlyingAssetAddress as Address, event);
 
   let user = getOrInitUser(event.params.from);
+  log.warning("update borrowedReservesCount: {} | {}",
+    [
+      userReserve.scaledVariableDebt.toString(),
+      userReserve.principalStableDebt.toString()
+    ]
+  );
   if (
     userReserve.scaledVariableDebt.equals(zeroBI()) &&
     userReserve.principalStableDebt.equals(zeroBI())
   ) {
     user.borrowedReservesCount += 1;
     user.save();
+    log.warning("increase borrowedReservesCount to {}", [
+      BigInt.fromI32(user.borrowedReservesCount).toString()
+    ]);
   }
 
   let calculatedAmount = rayDiv(value, index);
