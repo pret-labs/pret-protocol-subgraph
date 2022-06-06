@@ -1,6 +1,6 @@
 import { Initialized as ATokenInitialized } from '../../../generated/templates/AToken/AToken';
 import { Initialized as VTokenInitialized } from '../../../generated/templates/VariableDebtToken/VariableDebtToken';
-import { Initialized as STokenInitialized } from '../../../generated/templates/StableDebtToken/StableDebtToken';
+// import { Initialized as STokenInitialized } from '../../../generated/templates/StableDebtToken/StableDebtToken';
 import { AaveIncentivesController as AaveIncentivesControllerTemplate } from '../../../generated/templates';
 import { AaveIncentivesController as AaveIncentivesControllerC } from '../../../generated/templates/AaveIncentivesController/AaveIncentivesController';
 import {
@@ -17,9 +17,9 @@ export {
   handleATokenTransfer,
   handleVariableTokenBurn,
   handleVariableTokenMint,
-  handleStableTokenMint,
-  handleStableTokenBurn,
-  handleStableTokenBorrowAllowanceDelegated,
+  // handleStableTokenMint,
+  // handleStableTokenBurn,
+  // handleStableTokenBorrowAllowanceDelegated,
   handleVariableTokenBorrowAllowanceDelegated,
 } from './tokenization';
 
@@ -74,14 +74,14 @@ export function handleATokenInitialized(event: ATokenInitialized): void {
   );
 }
 
-export function handleSTokenInitialized(event: STokenInitialized): void {
-  createIncentivesController(
-    event.address,
-    event.params.incentivesController,
-    event.params.underlyingAsset,
-    event.params.pool
-  );
-}
+// export function handleSTokenInitialized(event: STokenInitialized): void {
+//   createIncentivesController(
+//     event.address,
+//     event.params.incentivesController,
+//     event.params.underlyingAsset,
+//     event.params.pool
+//   );
+// }
 
 export function handleVTokenInitialized(event: VTokenInitialized): void {
   createIncentivesController(
