@@ -314,21 +314,34 @@ export function handleVariableTokenBurn(event: VTokenBurn): void {
   saveReserve(poolReserve, event);
 
   let user = getOrInitUser(from);
-  log.warning("update borrowedReservesCount: {} | {}",
+  log.warning("update borrowedReservesCount: {} | {} | {} | {} | {}",
     [
+      from.toHexString(),
+      value.toString(),
       userReserve.scaledVariableDebt.toString(),
-      userReserve.principalStableDebt.toString()
+      userReserve.principalStableDebt.toString(),
+      BigInt.fromI32(user.borrowedReservesCount).toString()
     ]
   );
   if (
     userReserve.scaledVariableDebt.equals(zeroBI()) &&
     userReserve.principalStableDebt.equals(zeroBI())
   ) {
-    user.borrowedReservesCount -= 1;
-    user.save();
-    log.warning("descrease borrowedReservesCount to {}", [
-      BigInt.fromI32(user.borrowedReservesCount).toString()
-    ]);
+    if (user.borrowedReservesCount > 0) {
+      user.borrowedReservesCount -= 1;
+      user.save();
+      log.warning("descrease borrowedReservesCount to {}", [
+        BigInt.fromI32(user.borrowedReservesCount).toString()
+      ]);
+    } else {
+      // This should not happen, but it did happen for WETH
+      log.warning("descrease borrowedReservesCount failed; current borrowedReservesCount is 0; [{} - {} - {} - {}]", [
+        vToken.underlyingAssetAddress.toHexString(),
+        from.toHexString(),
+        value.toString(),
+        index.toString()
+      ]);
+    }
   }
 
   saveUserReserveVHistory(userReserve, event, index);
