@@ -150,6 +150,12 @@ function tokenBurn(event: ethereum.Event, from: Address, value: BigInt, index: B
 
   userReserve.scaledATokenBalance = userReserve.scaledATokenBalance.minus(calculatedAmount);
   userReserve.currentATokenBalance = rayMul(userReserve.scaledATokenBalance, index);
+  log.warning('tokenBurn: update currentATokenBalance; {} | {} | {} | {}', [
+    from.toHexString(),
+    value.toString(),
+    index.toString(),
+    userReserve.currentATokenBalance.toString()
+  ]);
   userReserve.variableBorrowIndex = poolReserve.variableBorrowIndex;
   userReserve.liquidityRate = poolReserve.liquidityRate;
 
@@ -314,7 +320,7 @@ export function handleVariableTokenBurn(event: VTokenBurn): void {
   saveReserve(poolReserve, event);
 
   let user = getOrInitUser(from);
-  log.warning("update borrowedReservesCount: {} | {} | {} | {} | {}",
+  log.warning("vTokenBurn: update borrowedReservesCount: {} | {} | {} | {} | {}",
     [
       from.toHexString(),
       value.toString(),
@@ -362,10 +368,13 @@ export function handleVariableTokenMint(event: VTokenMint): void {
   let userReserve = getOrInitUserReserve(from, vToken.underlyingAssetAddress as Address, event);
 
   let user = getOrInitUser(event.params.from);
-  log.warning("update borrowedReservesCount: {} | {}",
+  log.warning("vTokenMint: update borrowedReservesCount: {} | {} | {} | {} | {}",
     [
+      from.toHexString(),
+      value.toString(),
       userReserve.scaledVariableDebt.toString(),
-      userReserve.principalStableDebt.toString()
+      userReserve.principalStableDebt.toString(),
+      BigInt.fromI32(user.borrowedReservesCount).toString()
     ]
   );
   if (
